@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ELEON</string>
+    <string name="open_rv">Open RV</string>
+    <string name="blank_notification_title">Notification title</string>
+    <string name="blank_notification_message">Notification message</string>
+    <string name="buttonBack">Back</string>
+    <string name="buttonAdd">Add</string>
+</resources>
