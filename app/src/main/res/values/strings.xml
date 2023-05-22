@@ -5,4 +5,5 @@
     <string name="blank_notification_message">Notification message</string>
     <string name="buttonBack">Back</string>
     <string name="buttonAdd">Add</string>
+    <string name="buttonSave">Save</string>
 </resources>
