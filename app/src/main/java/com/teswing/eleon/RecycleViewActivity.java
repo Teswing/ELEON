@@ -4,11 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Data;
+import androidx.work.WorkInfo;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,35 +34,62 @@ import java.util.Random;
 public class RecycleViewActivity extends AppCompatActivity {
 
     private final String TAG = "RecycleView";
+    boolean updateNeeded = true;
     Gson gson = new Gson();
 
     RecyclerView recyclerView;
+
+    NotificationListViewModel notificationListViewModel;
 
     List<Notification> notifications = new ArrayList<>();
     private final RecyclerView.Adapter<NotificationAdapter.ViewHolder> adapter = new NotificationAdapter(notifications);
 
     ActivityRecycleViewBinding binding;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRecycleViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        notificationListViewModel = new NotificationListViewModel(getApplication());
 
-        recyclerView = findViewById(R.id.rvNotification);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setStackFromEnd(true);
-        linearLayoutManager.setReverseLayout(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapter);
+        initRecycleView();
+
         Uri repUri = getRepository();
-        try {
-            Reader reader = new FileReader(repUri.getPath());
-            Type notificationType = new TypeToken<ArrayList<Notification>>(){}.getType();
-            notifications.addAll(gson.fromJson(reader, notificationType)) ;
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        notificationListViewModel.loadData();
+
+        notificationListViewModel.getNotificationsLiveData().observe(this, new Observer<List<Notification>>() {
+            @Override
+            public void onChanged(List<Notification> notificationList) {
+                if(updateNeeded) {
+                    Log.i("NOTIFICATION LD", "I'm CHANGED");
+                    Log.e("NotificationLD", String.valueOf(notifications.size()));
+                    notifications.addAll(notificationList);
+                    adapter.notifyItemInserted(notifications.size() - 1);
+                    updateNeeded = false;
+                }
+            }
+        });
+
+        /*
+            Баг с пустым выводом LoadWorker, пропал после переустановки приложения
+        */
+//        notificationListViewModel.getSavedWorkInfo().observe(this, new Observer<List<WorkInfo>>() {
+//            @Override
+//            public void onChanged(List<WorkInfo> workInfos) {
+//                if(workInfos == null || workInfos.isEmpty()) {
+//                    return;
+//                }
+//                WorkInfo workInfo = workInfos.get(0);
+////                Log.i("Worker", workInfo.getOutputData().toString());
+//                if(workInfo.getState().isFinished()) {
+//                    Data outputData = workInfo.getOutputData();
+//                    String outputString = outputData.getString("TestValue");
+//                    Toast.makeText(getApplicationContext(), "DATA LOADED \n" + outputString, Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
 
 
@@ -76,9 +108,18 @@ public class RecycleViewActivity extends AppCompatActivity {
         });
     }
 
+    void initRecycleView(){
+        recyclerView = findViewById(R.id.rvNotification);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setReverseLayout(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapter);
+    }
+
     // Привязан в layout XML
     public void addNotification(View view) {
-        for (int i = 0 ; i < 10; i++) {
+        for (int i = 0 ; i < 5; i++) {
             Random rand = new Random();
             notifications.add(new Notification(
                     "APP: " + rand.ints(5, 97, 123)
@@ -90,6 +131,7 @@ public class RecycleViewActivity extends AppCompatActivity {
             ));
             adapter.notifyItemInserted(notifications.size() - 1);
             recyclerView.smoothScrollToPosition(notifications.size() - 1);
+            updateNeeded = true;
         }
     }
 
