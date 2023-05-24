@@ -1,8 +1,12 @@
 package com.teswing.eleon;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -17,7 +21,7 @@ import com.teswing.eleon.workers.LoadWorker;
 
 import java.util.List;
 
-public class NotificationListViewModel extends ViewModel {
+public class NotificationListViewModel extends AndroidViewModel {
 
     WorkManager workManager;
 
@@ -26,7 +30,7 @@ public class NotificationListViewModel extends ViewModel {
     private LiveData<List<WorkInfo>> savedWorkInfo;
 
     public NotificationListViewModel(Application application) {
-        super();
+        super(application);
         workManager = WorkManager.getInstance(application);
 //        savedWorkInfo = workManager.getWorkInfosByTagLiveData(Constants.TAG_REPOSITORY);
     }

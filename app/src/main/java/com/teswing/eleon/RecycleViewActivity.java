@@ -1,16 +1,21 @@
 package com.teswing.eleon;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.Data;
@@ -32,12 +37,15 @@ import java.util.List;
 import java.util.Random;
 
 // TODO: Разделить на ViewModel и Activity
+// TODO:2 И навести порядок
 public class RecycleViewActivity extends AppCompatActivity {
 
     private final String TAG = "RecycleView";
     Gson gson = new Gson();
 
     RecyclerView recyclerView;
+    NotificationReceiver notificationReceiver;
+
 
     NotificationListViewModel notificationListViewModel;
 
@@ -52,12 +60,16 @@ public class RecycleViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityRecycleViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        notificationListViewModel = new NotificationListViewModel(getApplication());
+        notificationListViewModel = new ViewModelProvider(this).get(NotificationListViewModel.class);
 
         initRecycleView();
 
         Uri repUri = getRepository();
         notificationListViewModel.loadData();
+        notificationReceiver = new NotificationReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.ACTION_NOTIFICATION_RECEIVER);
+        registerReceiver(notificationReceiver,intentFilter);
 
         notificationListViewModel.getNotificationsLiveData().observe(this, new Observer<List<Notification>>() {
             @Override
@@ -70,27 +82,6 @@ public class RecycleViewActivity extends AppCompatActivity {
                 }
             }
         });
-
-        /*
-            Баг с пустым выводом LoadWorker, пропал после переустановки приложения
-        */
-//        notificationListViewModel.getSavedWorkInfo().observe(this, new Observer<List<WorkInfo>>() {
-//            @Override
-//            public void onChanged(List<WorkInfo> workInfos) {
-//                if(workInfos == null || workInfos.isEmpty()) {
-//                    return;
-//                }
-//                WorkInfo workInfo = workInfos.get(0);
-////                Log.i("Worker", workInfo.getOutputData().toString());
-//                if(workInfo.getState().isFinished()) {
-//                    Data outputData = workInfo.getOutputData();
-//                    String outputString = outputData.getString("TestValue");
-//                    Toast.makeText(getApplicationContext(), "DATA LOADED \n" + outputString, Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-
-
 
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +98,12 @@ public class RecycleViewActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(notificationReceiver);
+    }
+
     void initRecycleView(){
         recyclerView = findViewById(R.id.rvNotification);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -116,9 +113,25 @@ public class RecycleViewActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    class NotificationReceiver extends BroadcastReceiver {
+        // Малый спект поддерживаемых устройств, дополнить
+        @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            android.app.Notification notification = intent.getParcelableExtra("Notification", android.app.Notification.class);
+            Bundle extras = notification.extras;
+            String title = extras.getString(android.app.Notification.EXTRA_TITLE);
+            String text = extras.getString(android.app.Notification.EXTRA_TEXT);
+            Notification itemNotification = new Notification(title, text);
+            notifications.add(itemNotification);
+            adapter.notifyItemInserted(notifications.size() - 1);
+            Log.e("Notification Receiver", "Message received");
+        }
+    }
+
     // Привязан в layout XML
     public void addNotification(View view) {
-        for (int i = 0 ; i < 5; i++) {
+        for (int i = 0 ; i < 1; i++) {
             Random rand = new Random();
             notifications.add(new Notification(
                     "APP: " + rand.ints(5, 97, 123)
