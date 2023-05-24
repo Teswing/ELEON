@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,7 +35,6 @@ import java.util.Random;
 public class RecycleViewActivity extends AppCompatActivity {
 
     private final String TAG = "RecycleView";
-    boolean updateNeeded = true;
     Gson gson = new Gson();
 
     RecyclerView recyclerView;
@@ -62,12 +62,11 @@ public class RecycleViewActivity extends AppCompatActivity {
         notificationListViewModel.getNotificationsLiveData().observe(this, new Observer<List<Notification>>() {
             @Override
             public void onChanged(List<Notification> notificationList) {
-                if(updateNeeded) {
+                if(getLifecycle().getCurrentState() == Lifecycle.State.RESUMED) {
                     Log.i("NOTIFICATION LD", "I'm CHANGED");
                     Log.e("NotificationLD", String.valueOf(notifications.size()));
                     notifications.addAll(notificationList);
                     adapter.notifyItemInserted(notifications.size() - 1);
-                    updateNeeded = false;
                 }
             }
         });
@@ -131,7 +130,6 @@ public class RecycleViewActivity extends AppCompatActivity {
             ));
             adapter.notifyItemInserted(notifications.size() - 1);
             recyclerView.smoothScrollToPosition(notifications.size() - 1);
-            updateNeeded = true;
         }
     }
 
