@@ -2,8 +2,6 @@ package com.teswing.eleon;
 
 import android.app.Notification;
 import android.content.Intent;
-import android.graphics.drawable.Icon;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -16,7 +14,7 @@ public class NotificationListener extends NotificationListenerService {
         super.onNotificationPosted(sbn);
         Log.i("Notification Listener", "Notification POSTED");
         Notification notification = sbn.getNotification();
-        Icon icon = notification.getSmallIcon();
+//        Icon icon = notification.getSmallIcon();
         Intent intent = new Intent(Constants.ACTION_NOTIFICATION_RECEIVER);
         intent.putExtra("Notification", sbn.getNotification());
         sendBroadcast(intent);

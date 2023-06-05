@@ -8,15 +8,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
 
-    private final List<Notification> notificationList;
-
-    NotificationAdapter(List<Notification> notificationList) {
-        this.notificationList = notificationList;
-    }
+    private List<Notification> notificationList = new ArrayList<>();
 
     @NonNull
     @Override
@@ -38,9 +35,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return notificationList.size();
     }
 
+    public void setNotificationList(List<Notification> notificationList) {
+        this.notificationList = notificationList;
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvTitle, tvMessage;
+        final TextView tvTitle, tvMessage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
