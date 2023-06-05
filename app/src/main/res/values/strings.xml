@@ -6,4 +6,8 @@
     <string name="buttonBack">Back</string>
     <string name="buttonAdd">Add</string>
     <string name="buttonSave">Save</string>
+    <string name="action_deleteAll">Delete All</string>
+    <string name="action_open">Open</string>
+    <string name="action_send">Send</string>
+    <string name="action_delete">Delete</string>
 </resources>

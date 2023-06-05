@@ -3,9 +3,11 @@ package com.teswing.eleon;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -58,7 +60,7 @@ public class NotificationListActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Notification> notificationList) {
                     Log.i("NOTIFICATION LD", "I'm CHANGED");
-                    adapter.setNotificationList(notificationList);
+                    adapter.submitList(notificationList);
             }
         });
 
@@ -76,11 +78,21 @@ public class NotificationListActivity extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         linearLayoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+        adapter.setOnItemClickListener(new NotificationAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Notification notification) {
+                Intent intent = new Intent(NotificationListActivity.this, NotificationInfoActivity.class);
+                intent.putExtra(Constants.EXTRA_TITLE, notification.getTitle());
+                intent.putExtra(Constants.EXTRA_MESSAGE, notification.getMessage());
+                startActivity(intent);
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 
     // Необходимо сохранять в переменную, иначе не работает ..what
-    final ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+    final ActivityResultLauncher<Intent> addNotification = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
@@ -100,7 +112,7 @@ public class NotificationListActivity extends AppCompatActivity {
     // Открыть форму создания уведомлений
     void addNotification_form() {
         Intent intent = new Intent(this, AddNotificationActivity.class);
-        launchSomeActivity.launch(intent);
+        addNotification.launch(intent);
     }
 
     @Override
@@ -112,14 +124,43 @@ public class NotificationListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.add_notification) {
-            addNotification_form();
-            return true;
+        switch (item.getItemId()) {
+            case (R.id.add_notification):
+                addNotification_form();
+                return true;
+            case (R.id.delete_all):
+                notificationListViewModel.deleteAll();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
-//    class NotificationReceiver extends BroadcastReceiver {
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        Log.i(TAG, "onContextItemSelected: " + menuInfo);
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case (R.id.open_notification):
+                Log.i(TAG, "onContextItemSelected: " + item.getMenuInfo());
+                return true;
+            case (R.id.send_notification):
+                return true;
+            case (R.id.delete_notification):
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+
+    }
+
+    //    class NotificationReceiver extends BroadcastReceiver {
 //        // Малый спектр поддерживаемых устройств, дополнить
 //        @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
 //        @Override

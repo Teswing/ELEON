@@ -6,4 +6,8 @@
         android:icon="@drawable/ico_add_sharp_24"
         android:title="@string/buttonAdd"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/delete_all"
+        android:title="@string/action_deleteAll"
+        app:showAsAction="never"/>
 </menu>
