@@ -10,4 +10,6 @@
     <string name="action_open">Open</string>
     <string name="action_send">Send</string>
     <string name="action_delete">Delete</string>
+    <string name="DEBUG_action_create">[DEBUG] Create notif</string>
+    <string name="notificationSent">Notification has been sent</string>
 </resources>

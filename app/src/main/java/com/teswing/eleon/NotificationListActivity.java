@@ -3,11 +3,10 @@ package com.teswing.eleon;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -23,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.teswing.eleon.databinding.ActivityRecycleViewBinding;
 
 import java.util.List;
+import java.util.Random;
 
 public class NotificationListActivity extends AppCompatActivity {
 
@@ -61,6 +61,8 @@ public class NotificationListActivity extends AppCompatActivity {
             public void onChanged(List<Notification> notificationList) {
                     Log.i("NOTIFICATION LD", "I'm CHANGED");
                     adapter.submitList(notificationList);
+                    Log.i("ON_UPDATE", String.valueOf(adapter.getItemCount()));
+                    recyclerView.smoothScrollToPosition(adapter.getItemCount());
             }
         });
 
@@ -81,13 +83,11 @@ public class NotificationListActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new NotificationAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Notification notification) {
-                Intent intent = new Intent(NotificationListActivity.this, NotificationInfoActivity.class);
-                intent.putExtra(Constants.EXTRA_TITLE, notification.getTitle());
-                intent.putExtra(Constants.EXTRA_MESSAGE, notification.getMessage());
-                startActivity(intent);
+                openNotification_card(notification);
             }
         });
         recyclerView.setAdapter(adapter);
+        registerForContextMenu(recyclerView);
     }
 
     // Необходимо сохранять в переменную, иначе не работает ..what
@@ -99,6 +99,11 @@ public class NotificationListActivity extends AppCompatActivity {
                     Log.i("ACTIVITY_Result", String.valueOf(result.getResultCode()));
                         if(result.getResultCode() == RESULT_OK) {
                             Intent data = result.getData();
+                            if (data == null) {
+                                Toast.makeText(NotificationListActivity.this,
+                                        "Received data is null", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                             String title = data.getStringExtra(Constants.EXTRA_TITLE);
                             String message = data.getStringExtra(Constants.EXTRA_MESSAGE);
 
@@ -113,6 +118,13 @@ public class NotificationListActivity extends AppCompatActivity {
     void addNotification_form() {
         Intent intent = new Intent(this, AddNotificationActivity.class);
         addNotification.launch(intent);
+    }
+
+    void openNotification_card(Notification notification) {
+        Intent intent = new Intent(NotificationListActivity.this, NotificationInfoActivity.class);
+        intent.putExtra(Constants.EXTRA_TITLE, notification.getTitle());
+        intent.putExtra(Constants.EXTRA_MESSAGE, notification.getMessage());
+        startActivity(intent);
     }
 
     @Override
@@ -131,28 +143,25 @@ public class NotificationListActivity extends AppCompatActivity {
             case (R.id.delete_all):
                 notificationListViewModel.deleteAll();
                 return true;
+            case (R.id.create_notification_debug):
+                createNotification();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        Log.i(TAG, "onContextItemSelected: " + menuInfo);
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.context_menu, menu);
-    }
-
-    @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.open_notification):
-                Log.i(TAG, "onContextItemSelected: " + item.getMenuInfo());
+                openNotification_card(adapter.getNotificationByPosition(item.getGroupId()));
                 return true;
             case (R.id.send_notification):
+                Toast.makeText(this, R.string.notificationSent, Toast.LENGTH_SHORT).show();
                 return true;
             case (R.id.delete_notification):
+                notificationListViewModel.delete(adapter.getNotificationByPosition(item.getGroupId()));
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -176,12 +185,10 @@ public class NotificationListActivity extends AppCompatActivity {
 //        }
 //    }
 
-    // Может переработать на тестовую кнопку
-    // Привязан в layout XML
-/*    public void addNotification(View view) {
+    public void createNotification() {
         for (int i = 0 ; i < 1; i++) {
             Random rand = new Random();
-            notifications.add(new Notification(
+            notificationListViewModel.insert(new Notification(
                     "APP: " + rand.ints(5, 97, 123)
                             .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                             .toString(),
@@ -189,8 +196,6 @@ public class NotificationListActivity extends AppCompatActivity {
                             .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                             .toString()
             ));
-            adapter.notifyItemInserted(notifications.size() - 1);
-            recyclerView.smoothScrollToPosition(notifications.size() - 1);
         }
-    }*/
+    }
 }

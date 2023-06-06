@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Notification.class}, version = 1)
+@Database(entities = {Notification.class}, version = 1, exportSchema = false)
 public abstract class NotificationDatabase extends RoomDatabase {
 
     private static NotificationDatabase instance;
