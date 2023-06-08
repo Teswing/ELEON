@@ -3,13 +3,19 @@
     <string name="open_rv">Open RV</string>
     <string name="blank_notification_title">Notification title</string>
     <string name="blank_notification_message">Notification message</string>
+    <string name="OK">OK</string>
+    <string name="CANCEL">Cancel</string>
     <string name="buttonBack">Back</string>
     <string name="buttonAdd">Add</string>
     <string name="buttonSave">Save</string>
+    <string name="buttonStartService">Start Service</string>
+    <string name="buttonStopService">Stop Service</string>
     <string name="action_deleteAll">Delete All</string>
     <string name="action_open">Open</string>
     <string name="action_send">Send</string>
     <string name="action_delete">Delete</string>
     <string name="DEBUG_action_create">[DEBUG] Create notif</string>
     <string name="notificationSent">Notification has been sent</string>
+    <string name="dialog_title">Permission required</string>
+    <string name="dialog_message_POST_NOTIFICATION">Needed to post Notifications</string>
 </resources>

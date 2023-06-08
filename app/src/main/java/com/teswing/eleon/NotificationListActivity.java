@@ -29,8 +29,6 @@ public class NotificationListActivity extends AppCompatActivity {
     private final String TAG = "RecycleView";
 
     RecyclerView recyclerView;
-//    NotificationReceiver notificationReceiver;
-
 
     NotificationListViewModel notificationListViewModel;
 
@@ -51,10 +49,6 @@ public class NotificationListActivity extends AppCompatActivity {
         setTitle("Notifications");
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ico_arrow_back_ios_sharp_24);
 
-//        notificationReceiver = new NotificationReceiver();
-//        IntentFilter intentFilter = new IntentFilter();
-//        intentFilter.addAction(Constants.ACTION_NOTIFICATION_RECEIVER);
-//        registerReceiver(notificationReceiver,intentFilter);
 
         notificationListViewModel.getNotificationsLiveData().observe(this, new Observer<List<Notification>>() {
             @Override
@@ -66,12 +60,6 @@ public class NotificationListActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        unregisterReceiver(notificationReceiver);
     }
 
     void initRecycleView(){
@@ -96,7 +84,7 @@ public class NotificationListActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    Log.i("ACTIVITY_Result", String.valueOf(result.getResultCode()));
+//                    Log.i("ACTIVITY_Result", String.valueOf(result.getResultCode()));
                         if(result.getResultCode() == RESULT_OK) {
                             Intent data = result.getData();
                             if (data == null) {
@@ -168,22 +156,6 @@ public class NotificationListActivity extends AppCompatActivity {
         }
 
     }
-
-    //    class NotificationReceiver extends BroadcastReceiver {
-//        // Малый спектр поддерживаемых устройств, дополнить
-//        @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            android.app.Notification notification = intent.getParcelableExtra("Notification", android.app.Notification.class);
-//            Bundle extras = notification.extras;
-//            String title = extras.getString(android.app.Notification.EXTRA_TITLE);
-//            String text = extras.getString(android.app.Notification.EXTRA_TEXT);
-//            Notification itemNotification = new Notification(title, text);
-//            notifications.add(itemNotification);
-//            adapter.notifyItemInserted(notifications.size() - 1);
-//            Log.e("Notification Receiver", "Message received");
-//        }
-//    }
 
     public void createNotification() {
         for (int i = 0 ; i < 1; i++) {
