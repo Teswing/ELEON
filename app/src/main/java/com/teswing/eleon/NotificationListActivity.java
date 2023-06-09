@@ -2,7 +2,6 @@ package com.teswing.eleon;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,7 +39,7 @@ public class NotificationListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e(TAG, "ACTIVITY (RE-)CREATED");
+//        Log.e(TAG, "ACTIVITY (RE-)CREATED");
         binding = ActivityRecycleViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         notificationListViewModel = new ViewModelProvider(this).get(NotificationListViewModel.class);
@@ -53,9 +52,9 @@ public class NotificationListActivity extends AppCompatActivity {
         notificationListViewModel.getNotificationsLiveData().observe(this, new Observer<List<Notification>>() {
             @Override
             public void onChanged(List<Notification> notificationList) {
-                    Log.i("NOTIFICATION LD", "I'm CHANGED");
+//                    Log.i("NOTIFICATION LD", "I'm CHANGED");
                     adapter.submitList(notificationList);
-                    Log.i("ON_UPDATE", String.valueOf(adapter.getItemCount()));
+//                    Log.i("ON_UPDATE", String.valueOf(adapter.getItemCount()));
                     recyclerView.smoothScrollToPosition(adapter.getItemCount());
             }
         });
@@ -75,6 +74,7 @@ public class NotificationListActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
         registerForContextMenu(recyclerView);
     }
 
