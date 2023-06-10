@@ -26,7 +26,7 @@ public class AddNotificationActivity extends AppCompatActivity {
             setResult(RESULT_CANCELED);
             finish();
         });
-       setTitle("Add Notification");
+       setTitle(R.string.addNotification_title);
 
     }
 
@@ -34,7 +34,7 @@ public class AddNotificationActivity extends AppCompatActivity {
         String title = etTitle.getText().toString();
         String message = etMessage.getText().toString();
         if (title.trim().isEmpty() || message.trim().isEmpty()) {
-            Toast.makeText(this, "One or more fields are empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.addNotification_field_empty, Toast.LENGTH_SHORT).show();
             return;
         }
         Intent data = new Intent();

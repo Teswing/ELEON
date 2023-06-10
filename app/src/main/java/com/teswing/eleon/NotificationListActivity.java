@@ -45,7 +45,7 @@ public class NotificationListActivity extends AppCompatActivity {
         notificationListViewModel = new ViewModelProvider(this).get(NotificationListViewModel.class);
 
         initRecycleView();
-        setTitle("Notifications");
+        setTitle(R.string.notificationList_title);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ico_arrow_back_ios_sharp_24);
 
 
@@ -89,7 +89,7 @@ public class NotificationListActivity extends AppCompatActivity {
                             Intent data = result.getData();
                             if (data == null) {
                                 Toast.makeText(NotificationListActivity.this,
-                                        "Received data is null", Toast.LENGTH_SHORT).show();
+                                        R.string.notificationList_dataIsNull, Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             String title = data.getStringExtra(Constants.EXTRA_TITLE);
@@ -110,6 +110,7 @@ public class NotificationListActivity extends AppCompatActivity {
 
     void openNotification_card(Notification notification) {
         Intent intent = new Intent(NotificationListActivity.this, NotificationInfoActivity.class);
+        intent.putExtra(Constants.EXTRA_ID, notification.getId());
         intent.putExtra(Constants.EXTRA_TITLE, notification.getTitle());
         intent.putExtra(Constants.EXTRA_MESSAGE, notification.getMessage());
         startActivity(intent);
@@ -148,6 +149,7 @@ public class NotificationListActivity extends AppCompatActivity {
             case (R.id.send_notification):
                 Toast.makeText(this, R.string.notificationSent, Toast.LENGTH_SHORT).show();
                 return true;
+            // TODO: Краш после удаления на реальном устройстве
             case (R.id.delete_notification):
                 notificationListViewModel.delete(adapter.getNotificationByPosition(item.getGroupId()));
                 return true;
@@ -160,13 +162,15 @@ public class NotificationListActivity extends AppCompatActivity {
     public void createNotification() {
         for (int i = 0 ; i < 1; i++) {
             Random rand = new Random();
+            String randTitle = rand.ints(5, 97, 123)
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString();
+            String randMessage = rand.ints(10, 97, 123)
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString();
             notificationListViewModel.insert(new Notification(
-                    "APP: " + rand.ints(5, 97, 123)
-                            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                            .toString(),
-                    "MESSAGE: " + rand.ints(10, 97, 123)
-                            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                            .toString()
+                    getText(R.string.notificationList_debugTitle) + " " + randTitle,
+                    getText(R.string.notificationList_debugMessage) + " " + randMessage
             ));
         }
     }

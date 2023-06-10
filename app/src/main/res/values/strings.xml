@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">ELEON</string>
-    <string name="open_rv">Open RV</string>
+    <string name="app_name" translatable="false">ELEON</string>
+    <string name="buttonOpen_rv">Open RV</string>
     <string name="blank_notification_title">Notification title</string>
     <string name="blank_notification_message">Notification message</string>
     <string name="OK">OK</string>
@@ -18,4 +18,16 @@
     <string name="notificationSent">Notification has been sent</string>
     <string name="dialog_title">Permission required</string>
     <string name="dialog_message_POST_NOTIFICATION">Needed to post Notifications</string>
+    <string name="addNotification_title">Add Notification</string>
+    <string name="addNotification_field_empty">One or more fields are empty</string>
+    <string name="mainActivity_serviceStarted">Service already started</string>
+    <string name="mainActivity_serviceStopped">Service stopped</string>
+    <string name="mainActivity_PermissionNYI">PERMISSION ERROR: \\nNot yet implemented</string>
+    <string name="mainActivity_PVPermissionGranted">|POST VERIFICATION| \\nPERMISSION GRANTED</string>
+    <string name="mainActivity_PVPermissionDenied">|POST VERIFICATION| \\nWAS NOT PERMISSION GRANTED</string>
+    <string name="notificationInfo_title">Notification #</string>
+    <string name="notificationList_title">Notifications</string>
+    <string name="notificationList_dataIsNull">Received data is null</string>
+    <string name="notificationList_debugTitle">TITLE: </string>
+    <string name="notificationList_debugMessage">MESSAGE: </string>
 </resources>

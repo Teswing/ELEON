@@ -22,6 +22,7 @@ public class NotificationInfoActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if(intent != null) {
+            setTitle(getText(R.string.notificationInfo_title) + " " /*+ intent.getStringExtra(Constants.EXTRA_ID)*/);
             tvInfoTitle.setText(intent.getStringExtra(Constants.EXTRA_TITLE));
             tvInfoMessage.setText(intent.getStringExtra(Constants.EXTRA_MESSAGE));
         }

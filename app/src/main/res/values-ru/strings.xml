@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ELEON</string>
+    <string name="buttonOpen_rv">Открыть список</string>
+    <string name="blank_notification_title">Заголовок</string>
+    <string name="blank_notification_message">Сообщение</string>
+    <string name="OK">ОК</string>
+    <string name="CANCEL">Отмена</string>
+    <string name="buttonBack">Назад</string>
+    <string name="buttonAdd">Добавить</string>
+    <string name="buttonSave">Сохранить</string>
+    <string name="buttonStartService">Запустить сервис</string>
+    <string name="buttonStopService">Остановить сервис</string>
+    <string name="action_deleteAll">Удалить всё</string>
+    <string name="action_open">Открыть</string>
+    <string name="action_send">Отправить</string>
+    <string name="action_delete">Удалить</string>
+    <string name="DEBUG_action_create">[ДЕБАГ] Создать увед</string>
+    <string name="notificationSent">Уведомление было отправлено</string>
+    <string name="dialog_title">Необходимо разрешение</string>
+    <string name="dialog_message_POST_NOTIFICATION">Необходимо для отправки уведомлений</string>
+    <string name="addNotification_title">Добавить уведомление</string>
+    <string name="addNotification_field_empty">Одно или более полей пусты</string>
+    <string name="mainActivity_serviceStarted">Сервис уже запущен</string>
+    <string name="mainActivity_serviceStopped">Сервис остановлен</string>
+    <string name="mainActivity_PermissionNYI">"ОШИБКА ВЫДАЧИ РАЗРЕШЕНИЙ: \\nЕще не реализовано "</string>
+    <string name="mainActivity_PVPermissionDenied">|ПОСТ-ПРОВЕРКА| \\nРАЗРЕШЕНИЕ НЕ ПОЛУЧЕНО</string>
+    <string name="mainActivity_PVPermissionGranted">|ПОСТ-ПРОВЕРКА| \\nРАЗРЕШЕНИЕ ПОЛУЧЕНО</string>
+    <string name="notificationInfo_title">Уведомление #</string>
+    <string name="notificationList_title">Уведомления</string>
+    <string name="notificationList_dataIsNull">Полученные данные пусты</string>
+    <string name="notificationList_debugTitle">"ЗАГОЛОВОК: "</string>
+    <string name="notificationList_debugMessage">"СООБЩЕНИЕ: "</string>
+</resources>

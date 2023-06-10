@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         if (notificationManager.areNotificationsEnabled()) {
             if (NotificationManagerCompat.getEnabledListenerPackages(this).contains(getPackageName())) {
-                Toast.makeText(this, "READ NOTIF ACCESS GRANTED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.mainActivity_serviceStarted, Toast.LENGTH_SHORT).show();
             } else {
                 Intent intent = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
                 startActivity(intent);
@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         if (NotificationManagerCompat.getEnabledListenerPackages(this).contains(getPackageName())) {
             Intent intent = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
             startActivity(intent);
+        } else {
+            Toast.makeText(this, R.string.mainActivity_serviceStopped, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.POST_NOTIFICATIONS},
                     POST_NOTIFICATION_PERMISSION_CODE);
         } else {
-            Toast.makeText(this, "PERMISSION ERROR: \nNot yet implemented", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.mainActivity_PermissionNYI, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -101,9 +103,9 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == POST_NOTIFICATION_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "|POST VERIFICATION| \nPERMISSION GRANTED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.mainActivity_PVPermissionGranted, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "|POST VERIFICATION| \nWAS NOT PERMISSION GRANTED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.mainActivity_PVPermissionDenied, Toast.LENGTH_SHORT).show();
             }
         }
     }
